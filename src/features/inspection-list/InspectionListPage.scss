@@ -1,0 +1,22 @@
+.inspection-list {
+  padding: 2rem 1.5rem;
+}
+
+.inspection-list__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-block-end: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.inspection-list__empty {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.inspection-list__empty-text {
+  color: var(--cds-text-secondary);
+  margin-block-start: 0.5rem;
+}

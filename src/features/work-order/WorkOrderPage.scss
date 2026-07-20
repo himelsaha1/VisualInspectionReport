@@ -1,0 +1,32 @@
+.work-order-page {
+  padding: 2rem 1.5rem;
+  max-width: 44rem;
+}
+
+.work-order-page__form {
+  margin-block-start: 1.5rem;
+}
+
+.work-order-page__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-block-end: 1rem;
+}
+
+@media (max-width: 40rem) {
+  .work-order-page__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.work-order-page__field {
+  margin-block-end: 1rem;
+}
+
+.work-order-page__actions {
+  display: flex;
+  gap: 1rem;
+  margin-block-start: 2rem;
+  flex-wrap: wrap;
+}

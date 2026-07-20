@@ -1,0 +1,82 @@
+[
+  {
+    "id": "asset-001",
+    "name": "Boiler Feed Pump A",
+    "assetNum": "BFP-001",
+    "location": "PLANT-A-LEVEL-2",
+    "assetType": "pump",
+    "description": "Centrifugal boiler feed pump, 500 HP, commissioned 2018"
+  },
+  {
+    "id": "asset-002",
+    "name": "Cooling Water Pump B",
+    "assetNum": "CWP-002",
+    "location": "PLANT-A-LEVEL-1",
+    "assetType": "pump",
+    "description": "Vertical turbine cooling water pump, 200 HP"
+  },
+  {
+    "id": "asset-003",
+    "name": "High Pressure Steam Pipe 3-Inch",
+    "assetNum": "HPP-003",
+    "location": "PLANT-B-PIPE-RACK-01",
+    "assetType": "pipe",
+    "description": "3-inch schedule 80 high pressure steam line"
+  },
+  {
+    "id": "asset-004",
+    "name": "Chemical Storage Tank T-04",
+    "assetNum": "CST-004",
+    "location": "PLANT-B-TANK-FARM",
+    "assetType": "tank",
+    "description": "5000-gallon stainless steel chemical storage tank"
+  },
+  {
+    "id": "asset-005",
+    "name": "Process Water Tank T-05",
+    "assetNum": "PWT-005",
+    "location": "PLANT-A-TANK-FARM",
+    "assetType": "tank",
+    "description": "10000-gallon carbon steel process water tank"
+  },
+  {
+    "id": "asset-006",
+    "name": "Gate Valve GV-06",
+    "assetNum": "GV-006",
+    "location": "PLANT-A-LEVEL-1",
+    "assetType": "valve",
+    "description": "8-inch gate valve, Class 300, high temperature service"
+  },
+  {
+    "id": "asset-007",
+    "name": "Conveyor Belt C-07",
+    "assetNum": "CB-007",
+    "location": "WAREHOUSE-LEVEL-1",
+    "assetType": "conveyor",
+    "description": "80-meter belt conveyor, aggregate transport"
+  },
+  {
+    "id": "asset-008",
+    "name": "Drive Motor M-08",
+    "assetNum": "DM-008",
+    "location": "PLANT-B-LEVEL-1",
+    "assetType": "motor",
+    "description": "750 kW induction motor, 3-phase, TEFC enclosure"
+  },
+  {
+    "id": "asset-009",
+    "name": "Lube Oil Pump P-09",
+    "assetNum": "LOP-009",
+    "location": "PLANT-A-LEVEL-1",
+    "assetType": "pump",
+    "description": "Gear-type lube oil pump, 15 HP, continuous duty"
+  },
+  {
+    "id": "asset-010",
+    "name": "Discharge Pipe Header DH-10",
+    "assetNum": "DPH-010",
+    "location": "PLANT-B-PIPE-RACK-02",
+    "assetType": "pipe",
+    "description": "6-inch discharge header, carbon steel, insulated"
+  }
+]

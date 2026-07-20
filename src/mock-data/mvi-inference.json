@@ -1,0 +1,77 @@
+[
+  {
+    "id": "mvi-result-001",
+    "inspectionId": "",
+    "modelName": "pump-surface-defect-v3",
+    "modelVersion": "3.1.2",
+    "processedAt": "2025-05-10T09:10:00Z",
+    "detections": [
+      {
+        "label": "Surface Corrosion",
+        "confidence": 87.4,
+        "bbox": [0.12, 0.18, 0.22, 0.15],
+        "severity": "high"
+      },
+      {
+        "label": "Paint Deterioration",
+        "confidence": 72.1,
+        "bbox": [0.55, 0.40, 0.18, 0.12],
+        "severity": "medium"
+      },
+      {
+        "label": "Minor Scratch",
+        "confidence": 63.8,
+        "bbox": [0.30, 0.65, 0.10, 0.08],
+        "severity": "low"
+      }
+    ]
+  },
+  {
+    "id": "mvi-result-002",
+    "inspectionId": "",
+    "modelName": "pipe-crack-detection-v2",
+    "modelVersion": "2.4.0",
+    "processedAt": "2025-05-08T15:20:00Z",
+    "detections": [
+      {
+        "label": "Hairline Crack",
+        "confidence": 91.2,
+        "bbox": [0.05, 0.45, 0.35, 0.06],
+        "severity": "high"
+      },
+      {
+        "label": "Weld Anomaly",
+        "confidence": 55.6,
+        "bbox": [0.60, 0.30, 0.20, 0.20],
+        "severity": "medium"
+      }
+    ]
+  },
+  {
+    "id": "mvi-result-003",
+    "inspectionId": "",
+    "modelName": "tank-surface-inspection-v1",
+    "modelVersion": "1.8.3",
+    "processedAt": "2025-05-09T11:40:00Z",
+    "detections": [
+      {
+        "label": "Pitting Corrosion",
+        "confidence": 34.5,
+        "bbox": [0.20, 0.25, 0.15, 0.15],
+        "severity": "high"
+      },
+      {
+        "label": "Surface Stain",
+        "confidence": 78.9,
+        "bbox": [0.45, 0.55, 0.25, 0.20],
+        "severity": "low"
+      },
+      {
+        "label": "Coating Blister",
+        "confidence": 42.3,
+        "bbox": [0.70, 0.15, 0.12, 0.10],
+        "severity": "medium"
+      }
+    ]
+  }
+]
