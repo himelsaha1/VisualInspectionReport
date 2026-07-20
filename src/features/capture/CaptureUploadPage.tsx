@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, InlineLoading } from '@carbon/react'
+import { Button, InlineLoading, ActionableNotification } from '@carbon/react'
 import {
   Camera,
   ArrowLeft,
@@ -11,6 +11,7 @@ import {
   WarningFilled,
   Edit,
   ArrowRight,
+  Image,
 } from '@carbon/icons-react'
 import {
   resolveAsset,
@@ -49,17 +50,66 @@ function msgId() {
   return `msg-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
 }
 
+// ─── Draft persistence ────────────────────────────────────────────────────────
+
+const DRAFT_KEY = 'maximo_inspection_draft'
+
+interface DraftState {
+  phase: Phase
+  messages: ChatMessage[]
+  resolution: AssetResolution | null
+  description: string
+  questionIndex: number
+  review: ReviewRecord | null
+  inspectionType: InspectionType
+  previewDataUrls: string[]
+}
+
+async function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+}
+
+function saveDraft(draft: DraftState) {
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft))
+  } catch {
+    // quota exceeded — silently ignore
+  }
+}
+
+function loadDraft(): DraftState | null {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY)
+    return raw ? (JSON.parse(raw) as DraftState) : null
+  } catch {
+    return null
+  }
+}
+
+function clearDraft() {
+  localStorage.removeItem(DRAFT_KEY)
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function CaptureUploadPage() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
   const threadEndRef = useRef<HTMLDivElement>(null)
   const replyRef = useRef<HTMLTextAreaElement>(null)
+  const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // ── Photo state
   const [images, setImages] = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>([])
+  // Parallel array of base64 data-URLs for draft persistence (File objects can't be serialised)
+  const [previewDataUrls, setPreviewDataUrls] = useState<string[]>([])
   const [dragOver, setDragOver] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
 
@@ -88,10 +138,66 @@ export default function CaptureUploadPage() {
   const [review, setReview] = useState<ReviewRecord | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
+  // ── Draft resume
+  const [showResumeBanner, setShowResumeBanner] = useState(false)
+  const pendingDraftRef = useRef<DraftState | null>(null)
+
   // ── Scroll to bottom of thread
   useEffect(() => {
     threadEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, aiTyping])
+
+  // ── Restore draft on mount ─────────────────────────────────────────────────
+  useEffect(() => {
+    const draft = loadDraft()
+    if (draft && draft.phase !== 'capture') {
+      // Only prompt resume if user was past the initial capture step
+      pendingDraftRef.current = draft
+      setShowResumeBanner(true)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const applyDraft = (draft: DraftState) => {
+    setPhase(draft.phase)
+    setMessages(draft.messages)
+    setResolution(draft.resolution)
+    setDescription(draft.description)
+    setQuestionIndex(draft.questionIndex)
+    setReview(draft.review)
+    setInspectionType(draft.inspectionType)
+    // Restore previews from stored data-URLs (no File objects — display-only)
+    setPreviews(draft.previewDataUrls)
+    setPreviewDataUrls(draft.previewDataUrls)
+    setShowResumeBanner(false)
+    pendingDraftRef.current = null
+  }
+
+  const handleResumeDraft = () => {
+    if (pendingDraftRef.current) applyDraft(pendingDraftRef.current)
+  }
+
+  const handleDiscardDraft = () => {
+    clearDraft()
+    setShowResumeBanner(false)
+    pendingDraftRef.current = null
+  }
+
+  // ── Save draft on state change (debounced 500 ms) ──────────────────────────
+  useEffect(() => {
+    // Don't persist the initial blank state or after submission
+    if (phase === 'capture' && messages.length === 0 && !description && previews.length === 0) return
+
+    if (draftSaveTimerRef.current) clearTimeout(draftSaveTimerRef.current)
+    draftSaveTimerRef.current = setTimeout(() => {
+      saveDraft({ phase, messages, resolution, description, questionIndex, review, inspectionType, previewDataUrls })
+    }, 500)
+
+    return () => {
+      if (draftSaveTimerRef.current) clearTimeout(draftSaveTimerRef.current)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, messages, resolution, description, questionIndex, review, inspectionType, previewDataUrls])
 
   // ─── Photo handling ────────────────────────────────────────────────────────
 
@@ -109,12 +215,17 @@ export default function CaptureUploadPage() {
     const urls = toAdd.map(f => URL.createObjectURL(f))
     setImages(prev => [...prev, ...toAdd])
     setPreviews(prev => [...prev, ...urls])
+    // Convert to data-URLs asynchronously for draft persistence
+    Promise.all(toAdd.map(fileToDataUrl)).then(dataUrls => {
+      setPreviewDataUrls(prev => [...prev, ...dataUrls])
+    })
   }, [images.length])
 
   const removeImage = (idx: number) => {
     URL.revokeObjectURL(previews[idx])
     setImages(prev => prev.filter((_, i) => i !== idx))
     setPreviews(prev => prev.filter((_, i) => i !== idx))
+    setPreviewDataUrls(prev => prev.filter((_, i) => i !== idx))
   }
 
   const handleDrop = (e: React.DragEvent) => {
@@ -279,6 +390,7 @@ export default function CaptureUploadPage() {
         imageUrls: previews,
         notes: [review.findings, review.notes].filter(Boolean).join(' | '),
       })
+      clearDraft()
       navigate(buildAnalysisRoute(inspection.id))
     } catch {
       setUploadError('Failed to submit inspection. Please try again.')
@@ -312,6 +424,22 @@ export default function CaptureUploadPage() {
 
   return (
     <div className="chat-capture">
+
+      {/* ── Draft resume banner ── */}
+      {showResumeBanner && (
+        <ActionableNotification
+          kind="info"
+          title="Resume inspection?"
+          subtitle="You have an inspection in progress. Resume where you left off, or start fresh."
+          actionButtonLabel="Resume"
+          onActionButtonClick={handleResumeDraft}
+          onClose={handleDiscardDraft}
+          style={{ marginBlockEnd: '1rem' }}
+          lowContrast
+          inline
+        />
+      )}
+
       <h2 className="chat-capture__heading">Start inspection</h2>
       <p className="chat-capture__sub">
         {phase === 'capture' && 'Add a photo and describe what you see — the AI will handle the rest.'}
@@ -323,7 +451,7 @@ export default function CaptureUploadPage() {
       {/* ── STEP 1: Photo zone + description ── */}
       {phase !== 'review' && (
         <>
-          {/* Drop zone */}
+          {/* Drop zone — click opens file picker */}
           <div
             className={`chat-capture__dropzone${dragOver ? ' chat-capture__dropzone--active' : ''}`}
             onClick={() => fileInputRef.current?.click()}
@@ -332,26 +460,47 @@ export default function CaptureUploadPage() {
             onDrop={handleDrop}
             role="button"
             tabIndex={0}
-            aria-label="Add inspection photos"
+            aria-label="Add inspection photos from library"
             onKeyDown={e => e.key === 'Enter' && fileInputRef.current?.click()}
           >
             <div className="chat-capture__dropzone-icon">
-              <Camera size={40} />
+              <Image size={40} />
             </div>
             <p className="chat-capture__dropzone-label">
               {images.length === 0
-                ? 'Tap to add a photo, or drag and drop here'
+                ? 'Tap to upload from library, or drag and drop here'
                 : `${images.length} photo${images.length > 1 ? 's' : ''} added — tap to add more`}
             </p>
             <p className="chat-capture__dropzone-hint">JPG, PNG, WebP · max {MAX_IMAGES} images · 10 MB each</p>
           </div>
 
+          {/* Camera capture button */}
+          <button
+            type="button"
+            className="chat-capture__camera-btn"
+            onClick={() => cameraInputRef.current?.click()}
+            aria-label="Take photo with device camera"
+          >
+            <Camera size={18} />
+            Take photo
+          </button>
+
+          {/* Hidden file inputs */}
           <input
             ref={fileInputRef}
             type="file"
             className="chat-capture__file-input"
             accept={ACCEPTED_IMAGE_TYPES.join(',')}
             multiple
+            onChange={e => { if (e.target.files) addFiles(e.target.files); e.target.value = '' }}
+          />
+          {/* capture="environment" opens rear camera on mobile */}
+          <input
+            ref={cameraInputRef}
+            type="file"
+            className="chat-capture__file-input"
+            accept={ACCEPTED_IMAGE_TYPES.join(',')}
+            capture="environment"
             onChange={e => { if (e.target.files) addFiles(e.target.files); e.target.value = '' }}
           />
 
@@ -678,6 +827,7 @@ export default function CaptureUploadPage() {
           renderIcon={ArrowLeft}
           onClick={() => {
             if (phase === 'review') { setPhase('chat'); return }
+            clearDraft()
             navigate(ROUTES.INSPECTIONS)
           }}
           disabled={submitting || phase === 'resolving'}
