@@ -10,6 +10,19 @@
   margin-block-end: 2rem;
 }
 
+/* Force Carbon's range date picker inputs onto one row */
+.dashboard-page__datepicker .cds--date-picker {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.dashboard-page__datepicker .cds--date-picker-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .dashboard-page__kpis {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

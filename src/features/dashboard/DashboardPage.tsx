@@ -38,20 +38,22 @@ export default function DashboardPage() {
           }
           style={{ minWidth: '11rem' }}
         />
-        <DatePicker
-          datePickerType="range"
-          dateFormat="Y-m-d"
-          onChange={([start, end]) => {
-            setFilters(f => ({
-              ...f,
-              startDate: start ? start.toISOString().split('T')[0] : '',
-              endDate: end ? end.toISOString().split('T')[0] : '',
-            }))
-          }}
-        >
-          <DatePickerInput id="dash-start" placeholder="Start date" labelText="Date range" size="md" />
-          <DatePickerInput id="dash-end" placeholder="End date" labelText="" size="md" />
-        </DatePicker>
+        <div className="dashboard-page__datepicker">
+          <DatePicker
+            datePickerType="range"
+            dateFormat="Y-m-d"
+            onChange={([start, end]) => {
+              setFilters(f => ({
+                ...f,
+                startDate: start ? start.toISOString().split('T')[0] : '',
+                endDate: end ? end.toISOString().split('T')[0] : '',
+              }))
+            }}
+          >
+            <DatePickerInput id="dash-start" placeholder="Start date" labelText="Date range" size="md" />
+            <DatePickerInput id="dash-end" placeholder="End date" labelText="End date" hideLabel size="md" />
+          </DatePicker>
+        </div>
       </div>
 
       {/* KPI tiles */}
