@@ -59,6 +59,27 @@
   display: none;
 }
 
+/* ── Camera capture button ────────────────────────────────────────── */
+.chat-capture__camera-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-block-end: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--cds-layer);
+  border: 1px solid var(--cds-border-strong-01);
+  border-radius: 4px;
+  color: var(--cds-text-primary);
+  font-size: 0.875rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.chat-capture__camera-btn:hover {
+  background: var(--cds-layer-hover);
+}
+
 /* ── Thumbnail strip ──────────────────────────────────────────────── */
 .chat-capture__thumbs {
   display: flex;

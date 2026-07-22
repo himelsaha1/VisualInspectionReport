@@ -20,3 +20,16 @@
   color: var(--cds-text-secondary);
   margin-block-start: 0.5rem;
 }
+
+/* Force history tab date range pickers onto one row */
+.inspection-list__datepicker .cds--date-picker {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.inspection-list__datepicker .cds--date-picker-container {
+  display: flex;
+  flex-direction: column;
+}

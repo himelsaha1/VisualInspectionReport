@@ -21,7 +21,7 @@ import {
 } from '@/services/ai.service'
 import type { AssetResolution, ChatMessage, ReviewRecord } from '@/services/ai.service'
 import { createInspection } from '@/services/inspection.service'
-import { buildAnalysisRoute, ROUTES } from '@/constants/routes'
+import { buildAnalysisRoute } from '@/constants/routes'
 import {
   MAX_IMAGES,
   MAX_IMAGE_SIZE_BYTES,
@@ -391,6 +391,8 @@ export default function CaptureUploadPage() {
         notes: [review.findings, review.notes].filter(Boolean).join(' | '),
       })
       clearDraft()
+      // Navigate to analysis for the new record; the analysis page
+      // has its own "New inspection" CTA that returns to /
       navigate(buildAnalysisRoute(inspection.id))
     } catch {
       setUploadError('Failed to submit inspection. Please try again.')
@@ -828,7 +830,7 @@ export default function CaptureUploadPage() {
           onClick={() => {
             if (phase === 'review') { setPhase('chat'); return }
             clearDraft()
-            navigate(ROUTES.INSPECTIONS)
+            navigate('/')
           }}
           disabled={submitting || phase === 'resolving'}
         >

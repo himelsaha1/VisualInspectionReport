@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet, useLocation, NavLink } from 'react-router-dom'
+import { Outlet, NavLink, useLocation } from 'react-router-dom'
 import {
   Header,
   HeaderName,
@@ -8,61 +8,67 @@ import {
   SideNavItems,
   SideNavLink,
   Content,
-  Toggle,
-  Breadcrumb,
-  BreadcrumbItem,
   SkipToContent,
 } from '@carbon/react'
 import {
+  Add,
+  Time,
   Dashboard,
-  DocumentMultiple_01,
-  ViewFilled,
+  Settings,
 } from '@carbon/icons-react'
 import { useTheme } from '@/hooks/useTheme'
-import { useBreadcrumbs } from '@/hooks/useBreadcrumbs'
 import { ROUTES } from '@/constants/routes'
+import GlobalChat from '@/components/GlobalChat'
 import './AppShell.scss'
 
 const NAV_ITEMS = [
-  { label: 'Inspections', href: ROUTES.INSPECTIONS, icon: ViewFilled },
-  { label: 'History', href: ROUTES.HISTORY, icon: DocumentMultiple_01 },
-  { label: 'Dashboard', href: ROUTES.DASHBOARD, icon: Dashboard },
+  { label: 'New inspection', href: ROUTES.HOME,       icon: Add       },
+  { label: 'History',        href: ROUTES.INSPECTIONS, icon: Time      },
+  { label: 'Dashboard',      href: ROUTES.DASHBOARD,  icon: Dashboard },
+  { label: 'Settings',       href: ROUTES.SETTINGS,   icon: Settings  },
 ]
 
 export default function AppShell() {
   const { theme, toggleTheme } = useTheme()
   const location = useLocation()
-  const breadcrumbs = useBreadcrumbs()
-  const [isSideNavExpanded, setIsSideNavExpanded] = useState(false)
+  const [sideNavOpen, setSideNavOpen] = useState(false)
+
+  const isActive = (href: string) =>
+    href === '/'
+      ? location.pathname === '/'
+      : location.pathname === href || location.pathname.startsWith(href + '/')
 
   return (
     <>
       <SkipToContent href="#main-content">Skip to main content</SkipToContent>
 
-      <Header aria-label="Maximo Visual Inspections">
+      <Header aria-label="IBM Maximo Visual Inspections">
         <HeaderMenuButton
-          aria-label={isSideNavExpanded ? 'Close menu' : 'Open menu'}
-          onClick={() => setIsSideNavExpanded(prev => !prev)}
-          isActive={isSideNavExpanded}
+          aria-label={sideNavOpen ? 'Close navigation' : 'Open navigation'}
+          onClick={() => setSideNavOpen(v => !v)}
+          isActive={sideNavOpen}
         />
         <HeaderName prefix="IBM">Maximo Visual Inspections</HeaderName>
+
+        {/* Theme toggle in header */}
         <div className="mvi-header__actions">
-          <Toggle
-            id="theme-toggle"
-            size="sm"
-            labelA="Light"
-            labelB="Dark"
-            toggled={theme === 'g100'}
-            onToggle={toggleTheme}
-            aria-label="Toggle light/dark theme"
-          />
+          <button
+            type="button"
+            className="mvi-theme-btn"
+            aria-label={`Switch to ${theme === 'g100' ? 'light' : 'dark'} theme`}
+            onClick={toggleTheme}
+            title={`Switch to ${theme === 'g100' ? 'light' : 'dark'} theme`}
+          >
+            {theme === 'g100' ? '☀' : '☾'}
+          </button>
         </div>
       </Header>
 
+      {/* Desktop / tablet side nav */}
       <SideNav
         aria-label="Side navigation"
-        expanded={isSideNavExpanded}
-        onOverlayClick={() => setIsSideNavExpanded(false)}
+        expanded={sideNavOpen}
+        onOverlayClick={() => setSideNavOpen(false)}
         isRail
       >
         <SideNavItems>
@@ -72,8 +78,8 @@ export default function AppShell() {
               as={NavLink}
               to={href}
               renderIcon={Icon}
-              isActive={location.pathname === href || location.pathname.startsWith(href + '/')}
-              onClick={() => setIsSideNavExpanded(false)}
+              isActive={isActive(href)}
+              onClick={() => setSideNavOpen(false)}
             >
               {label}
             </SideNavLink>
@@ -82,24 +88,29 @@ export default function AppShell() {
       </SideNav>
 
       <Content id="main-content" className="mvi-content">
-        {/* Breadcrumb — hide on top-level routes */}
-        {breadcrumbs.length > 2 && (
-          <div className="mvi-breadcrumb">
-            <Breadcrumb noTrailingSlash>
-              {breadcrumbs.map((crumb, idx) => (
-                <BreadcrumbItem
-                  key={idx}
-                  href={crumb.href}
-                  isCurrentPage={!crumb.href}
-                >
-                  {crumb.label}
-                </BreadcrumbItem>
-              ))}
-            </Breadcrumb>
-          </div>
-        )}
         <Outlet />
       </Content>
+
+      {/* Mobile bottom tab bar — shown only on small screens via CSS */}
+      <nav className="mvi-bottom-tabs" aria-label="Main navigation">
+        {NAV_ITEMS.map(({ label, href, icon: Icon }) => (
+          <NavLink
+            key={href}
+            to={href}
+            end={href === '/'}
+            className={({ isActive: a }) =>
+              `mvi-bottom-tabs__item${a ? ' mvi-bottom-tabs__item--active' : ''}`
+            }
+            aria-label={label}
+          >
+            <Icon size={20} />
+            <span>{label}</span>
+          </NavLink>
+        ))}
+      </nav>
+
+      {/* Global AI assistant — present on every screen */}
+      <GlobalChat />
     </>
   )
 }
