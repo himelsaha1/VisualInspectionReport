@@ -5,10 +5,11 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  root: './frontend',
   plugins: [react(), svgr()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, './frontend/src'),
     },
   },
   css: {
