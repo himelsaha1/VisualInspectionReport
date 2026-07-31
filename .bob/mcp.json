@@ -1,23 +1,13 @@
 {
   "mcpServers": {
-    "maximo": {
-      "command": "uvx",
-      "args": [
-        "--with-requirements",
-        "/Users/shivpalla/VisualInspectionReport/mcp-maximo/requirements.txt",
-        "--from",
-        "mcp",
-        "mcp",
-        "run",
-        "/Users/shivpalla/VisualInspectionReport/mcp-maximo/server.py"
-      ],
-      "env": {
-        "MAXIMO_BASE_URL": "http://localhost:8001/maximo",
-        "MAXIMO_API_KEY": "84538hoqqtngniqmorbpd10sll50grkmtouehl38",
-        "MAXIMO_USERNAME": "maxadmin",
-        "MAXIMO_PASSWORD": "maxadmin1234567",
-        "MAXIMO_LEAN": "1"
-      }
+    "mas-mcp": {
+      "type": "streamable-http",
+      "url": "https://masdev-mcp.manage.metadaily.apps.mngai-1086.cp.fyre.ibm.com/mcp",
+      "headers": {
+        "apikey": "4he2d9690c00a2t608ap9e2icu1jliprbkdqn0u0"
+      },
+      "disabled": false,
+      "alwaysAllow": []
     }
   }
 }
