@@ -54,6 +54,107 @@
   margin-block-start: 0.25rem;
 }
 
+/* ── Photo action buttons (Take photo / Upload) ───────────────────── */
+.chat-capture__photo-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-block-end: 1rem;
+}
+
+.chat-capture__photo-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 2px dashed var(--cds-border-subtle-01);
+  border-radius: 6px;
+  background: var(--cds-layer);
+  color: var(--cds-text-secondary);
+  font-size: 0.875rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.chat-capture__photo-btn:hover:not(:disabled) {
+  border-color: var(--cds-interactive);
+  background: var(--cds-layer-hover);
+  color: var(--cds-text-primary);
+}
+
+.chat-capture__photo-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.chat-capture__photo-btn--camera {
+  border-style: solid;
+  border-color: var(--cds-interactive);
+  color: var(--cds-link-primary);
+  font-weight: 600;
+}
+
+.chat-capture__photo-btn--camera:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--cds-interactive) 8%, var(--cds-layer));
+}
+
+.chat-capture__photo-actions--dragover .chat-capture__photo-btn {
+  border-color: var(--cds-interactive);
+  background: var(--cds-layer-hover);
+}
+
+/* ── Optional field sections ─────────────────────────────────────── */
+.chat-capture__section {
+  margin-block-end: 1.25rem;
+}
+
+.chat-capture__section-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--cds-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-block-end: 0.5rem;
+}
+
+.chat-capture__desc-wrapper {
+  position: relative;
+}
+
+.chat-capture__mic-btn {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--cds-text-secondary);
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  border-radius: 50%;
+  transition: color 0.15s, background 0.15s;
+  z-index: 1;
+}
+
+.chat-capture__mic-btn:hover {
+  color: var(--cds-text-primary);
+  background: var(--cds-layer-hover);
+}
+
+.chat-capture__mic-btn--listening {
+  color: var(--cds-support-error);
+  animation: mic-pulse 1s ease-in-out infinite;
+}
+
+@keyframes mic-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 /* hidden real input */
 .chat-capture__file-input {
   display: none;

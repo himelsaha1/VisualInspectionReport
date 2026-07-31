@@ -76,6 +76,51 @@
   background: var(--cds-support-info);
 }
 
+.results-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-end: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.results-page__condition-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.625rem 1.25rem;
+  border: 2px solid var(--cds-border-subtle-01);
+  border-radius: 8px;
+  min-width: 6rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.results-page__summary-tile {
+  margin-block-end: 1.5rem;
+  background: var(--cds-layer);
+}
+
+.results-page__recommendations-tile {
+  margin-block-start: 1.5rem;
+  background: var(--cds-layer);
+}
+
+.results-page__recommendations-list {
+  padding-inline-start: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.results-page__notes-tile {
+  margin-block-start: 1.5rem;
+  background: var(--cds-layer);
+}
+
 .results-page__actions {
   display: flex;
   gap: 1rem;

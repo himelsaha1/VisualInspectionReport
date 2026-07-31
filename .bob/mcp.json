@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "mas-mcp": {
+      "type": "streamable-http",
+      "url": "https://masdev-mcp.manage.metadaily.apps.mngai-1086.cp.fyre.ibm.com/mcp",
+      "headers": {
+        "apikey": "4he2d9690c00a2t608ap9e2icu1jliprbkdqn0u0"
+      },
+      "disabled": false,
+      "alwaysAllow": []
+    }
+  }
+}

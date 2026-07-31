@@ -1,32 +1,40 @@
 /**
- * mvi.service.ts — Maximo Visual Intelligence API service
+ * mvi.service.ts — Maximo Visual Intelligence service
  *
- * STUB MODE: returns mock inference results with a simulated delay.
- *
- * TODO: replace stub with real MVI API call:
- *   POST {VITE_MVI_BASE_URL}/api/v1/deployment/{deploymentId}/infer
- *   Headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
- *   Body: FormData with key "files" containing the image(s)
- *   Docs: https://www.ibm.com/docs/en/masv-and-l/maximo-vi/cd?topic=overview-rest-apis
+ * Sends the inspection image to the FastAPI backend which runs the AI pipeline
+ * and returns structured defect findings.  The backend's `/analyze` endpoint
+ * currently runs a stub pipeline; swap in a real MVI API call inside
+ * backend/app/services/ai_pipeline.py when credentials are available.
  */
 
 import type { MviInferenceResult } from '@/types'
-import mockResults from '@/mock-data/mvi-inference.json'
-import { mockDelay } from './utils'
+import { apiAnalyzeInspection } from './api'
 
+/**
+ * Analyze an inspection's uploaded images by calling the backend `/analyze`
+ * endpoint.  The `_file` parameter is kept for API compatibility with callers
+ * that already hold the File object; actual image bytes were uploaded during
+ * createInspection() so the backend already has them.
+ */
 export async function analyzeImage(
   _file: File,
   inspectionId: string
 ): Promise<MviInferenceResult> {
-  // STUB: simulate MVI inference latency (1200–2000ms)
-  await mockDelay(1200 + Math.random() * 800)
+  const report = await apiAnalyzeInspection(inspectionId)
 
-  // Pick a random mock result and bind it to this inspection
-  const base = mockResults[Math.floor(Math.random() * mockResults.length)]
   return {
-    ...base,
-    id: `mvi-${Date.now()}`,
+    id: `mvi-${inspectionId}-${Date.now()}`,
     inspectionId,
+    modelName: 'MVI-Inspection-Pipeline',
+    modelVersion: '1.0',
     processedAt: new Date().toISOString(),
-  } as MviInferenceResult
+    detections: report.findings.map(f => ({
+      label: f.label,
+      // backend returns 0–1 fraction; frontend type uses 0–100 percentage
+      confidence: Math.round(f.confidence * 100),
+      severity: f.severity as 'high' | 'medium' | 'low',
+      bbox: f.bbox,
+    })),
+    rawResponse: report,
+  }
 }

@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     upload_dir: str = "backend/uploads"
 
+    # ── Google Gemini Vision AI ──────────────────────────────────────────────
+    gemini_api_key: str = ""
+
     # ── IBM Maximo Manage ────────────────────────────────────────────────────
     maximo_base_url: str = "https://masdev.manage.metadev.apps.mngai-1086.cp.fyre.ibm.com/maximo"
     maximo_api_key: str = "84538hoqqtngniqmorbpd10sll50grkmtouehl38"
@@ -20,7 +23,8 @@ class Settings(BaseSettings):
     mas_mcp_url: str = "https://masdev-mcp.manage.metadev.apps.mngai-1086.cp.fyre.ibm.com/mcp"
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        # Load both locations — works whether uvicorn is run from repo root or backend/
+        env_file=(".env", "backend/.env"),
         env_file_encoding="utf-8",
         extra="ignore",
     )

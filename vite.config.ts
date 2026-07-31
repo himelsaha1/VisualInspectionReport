@@ -19,4 +19,17 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    proxy: {
+      // Proxy /api/* and /uploads/* to the FastAPI backend during dev
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+      '/uploads': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+    },
+  },
 })

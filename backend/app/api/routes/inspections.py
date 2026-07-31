@@ -4,6 +4,7 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.database import get_db
 from app.db.models.inspection import Inspection, InspectionImage, InspectionReport
 from app.db.schemas.inspection import InspectionCreate, InspectionRead, ReportRead
@@ -12,6 +13,10 @@ from app.services.pdf_service import pdf_service
 from app.services.storage_service import storage_service
 
 router = APIRouter(prefix="/api/inspections", tags=["inspections"])
+
+# Base URL used to build public image URLs returned to the frontend.
+# e.g.  http://localhost:8000/uploads/3/abc.jpg
+_API_BASE = "http://localhost:8000"
 
 
 @router.post("", response_model=InspectionRead)
@@ -51,6 +56,11 @@ def upload_inspection_image(
         raise HTTPException(status_code=404, detail="Inspection not found")
 
     file_path = storage_service.save_upload(inspection_id, file)
+
+    # Build a public URL the frontend can use directly
+    relative = Path(file_path).relative_to(settings.upload_dir)
+    image_url = f"{_API_BASE}/uploads/{relative.as_posix()}"
+
     image = InspectionImage(
         inspection_id=inspection.id,
         file_name=file.filename or "upload.bin",
@@ -59,8 +69,14 @@ def upload_inspection_image(
     )
     db.add(image)
     db.commit()
+    db.refresh(image)
 
-    return {"inspection_id": inspection_id, "file_path": file_path}
+    return {
+        "id": image.id,
+        "inspection_id": inspection_id,
+        "file_path": file_path,
+        "image_url": image_url,
+    }
 
 
 @router.post("/{inspection_id}/analyze", response_model=ReportRead)

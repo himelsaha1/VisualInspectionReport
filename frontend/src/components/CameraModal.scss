@@ -1,0 +1,261 @@
+/* ── Overlay ─────────────────────────────────────────────────────── */
+.camera-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;      /* sheet slides up from bottom on mobile */
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .camera-modal {
+    align-items: center;      /* centred dialog on desktop */
+  }
+}
+
+.camera-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+/* ── Panel ───────────────────────────────────────────────────────── */
+.camera-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 560px;
+  background: #161616;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .camera-modal__panel {
+    border-radius: 12px;
+    max-height: 90vh;
+  }
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+.camera-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #393939;
+}
+
+.camera-modal__title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #f4f4f4;
+}
+
+.camera-modal__close {
+  background: none;
+  border: none;
+  color: #c6c6c6;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.camera-modal__close:hover {
+  color: #f4f4f4;
+  background: #393939;
+}
+
+/* ── Viewfinder ──────────────────────────────────────────────────── */
+.camera-modal__viewfinder {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #000;
+  overflow: hidden;
+}
+
+.camera-modal__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.camera-modal__video--hidden {
+  display: none;
+}
+
+.camera-modal__preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.camera-modal__canvas {
+  display: none;
+}
+
+.camera-modal__starting {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8d8d8d;
+  font-size: 0.875rem;
+}
+
+/* Crosshair guide overlay */
+.camera-modal__guide {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.camera-modal__guide::before,
+.camera-modal__guide::after {
+  content: '';
+  position: absolute;
+  background: rgba(255,255,255,0.25);
+}
+
+.camera-modal__guide::before {
+  /* horizontal rule */
+  top: 50%;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.camera-modal__guide::after {
+  /* vertical rule */
+  left: 50%;
+  top: 10%;
+  bottom: 10%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+/* ── Error state ─────────────────────────────────────────────────── */
+.camera-modal__error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  gap: 1rem;
+  color: #fa4d56;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* ── Controls bar ────────────────────────────────────────────────── */
+.camera-modal__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem 1.75rem;
+  background: #161616;
+}
+
+/* Generic icon button */
+.camera-modal__control-btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid #525252;
+  background: #262626;
+  color: #c6c6c6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.camera-modal__control-btn:hover:not(:disabled) {
+  background: #393939;
+  color: #f4f4f4;
+}
+
+.camera-modal__control-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.camera-modal__control-btn--label {
+  width: auto;
+  border-radius: 6px;
+  padding: 0 1rem;
+  font-size: 0.875rem;
+  color: #78a9ff;
+  border-color: #78a9ff;
+}
+
+/* Shutter button */
+.camera-modal__shutter {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  background: rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: background 0.12s, transform 0.1s;
+  position: relative;
+}
+
+.camera-modal__shutter::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: #fff;
+  transition: background 0.12s;
+}
+
+.camera-modal__shutter:hover:not(:disabled)::after {
+  background: #e0e0e0;
+}
+
+.camera-modal__shutter:active:not(:disabled) {
+  transform: scale(0.93);
+}
+
+.camera-modal__shutter:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Use photo button */
+.camera-modal__use-btn {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  border: none;
+  background: #42be65;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, transform 0.1s;
+}
+
+.camera-modal__use-btn:hover {
+  background: #36a859;
+}
+
+.camera-modal__use-btn:active {
+  transform: scale(0.93);
+}
