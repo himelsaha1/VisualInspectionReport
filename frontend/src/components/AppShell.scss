@@ -1,16 +1,96 @@
+/* ── Header actions ─────────────────────────────────────────────────── */
 .mvi-header__actions {
   display: flex;
   align-items: center;
   margin-inline-start: auto;
   padding-inline-end: 1rem;
-  gap: 0.5rem;
 }
 
+.mvi-theme-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--cds-text-on-color, #fff);
+  font-size: 1.1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.mvi-theme-btn:hover {
+  background: var(--cds-layer-hover, rgba(255,255,255,0.1));
+}
+
+/* ── Main content area ──────────────────────────────────────────────── */
 .mvi-content {
-  padding-block-start: 3rem; /* below Carbon header */
+  /* below Carbon header (3rem = 48px) */
+  padding-block-start: 3rem;
+  /* leave room for side nav rail (3rem = 48px) on desktop */
+  padding-inline-start: 3rem;
   min-block-size: calc(100vh - 3rem);
+  /* leave space for mobile bottom tab bar */
+  padding-block-end: 4rem;
 }
 
-.mvi-breadcrumb {
-  padding: 0.75rem 1.5rem 0;
+/* ── Mobile bottom tab bar ──────────────────────────────────────────── */
+.mvi-bottom-tabs {
+  display: none; /* hidden on desktop */
+  position: fixed;
+  inset-block-end: 0;
+  inset-inline: 0;
+  background: var(--cds-background);
+  border-block-start: 1px solid var(--cds-border-subtle-01);
+  z-index: 6000;
+  /* 4 equal columns */
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.mvi-bottom-tabs__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0.25rem;
+  color: var(--cds-text-secondary);
+  text-decoration: none;
+  font-size: 0.625rem;
+  font-family: var(--cds-body-compact-01-font-family, inherit);
+  min-block-size: 3.5rem; /* ≥44px touch target */
+  transition: color 0.15s;
+}
+
+.mvi-bottom-tabs__item--active {
+  color: var(--cds-interactive);
+}
+
+.mvi-bottom-tabs__item span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 4.5rem;
+  text-align: center;
+}
+
+/* ── Responsive breakpoint ──────────────────────────────────────────── */
+/* Carbon's lg breakpoint is 1056px; we use 672px (md) as mobile cutoff */
+@media (max-width: 671px) {
+  /* Show bottom tabs, hide side nav */
+  .mvi-bottom-tabs {
+    display: grid;
+  }
+
+  /* Reset side-nav indent — it's not visible on mobile */
+  .mvi-content {
+    padding-inline-start: 0;
+  }
+
+  /* Extra bottom padding to clear the tab bar */
+  .mvi-content {
+    padding-block-end: 5rem;
+  }
 }

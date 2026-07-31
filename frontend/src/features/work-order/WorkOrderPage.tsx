@@ -17,7 +17,7 @@ import {
 import { ArrowLeft, Checkmark } from '@carbon/icons-react'
 import { getInspection, updateInspection } from '@/services/inspection.service'
 import { createWorkOrder } from '@/services/maximo.service'
-import { buildAnalysisRoute, ROUTES } from '@/constants/routes'
+import { buildAnalysisRoute } from '@/constants/routes'
 import type { Inspection, WorkOrderPriority } from '@/types'
 import './WorkOrderPage.scss'
 
@@ -71,7 +71,7 @@ export default function WorkOrderPage() {
   useEffect(() => {
     if (successWoNum) {
       redirectTimer.current = setTimeout(() => {
-        navigate(ROUTES.INSPECTIONS)
+        navigate('/')
       }, 3000)
     }
     return () => {

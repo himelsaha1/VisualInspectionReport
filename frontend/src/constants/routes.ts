@@ -8,6 +8,7 @@ export const ROUTES = {
   INSPECTION_RESULTS: '/inspections/:id/results',
   HISTORY: '/history',
   DASHBOARD: '/dashboard',
+  SETTINGS: '/settings',
 } as const
 
 export function buildAnalysisRoute(id: string) {

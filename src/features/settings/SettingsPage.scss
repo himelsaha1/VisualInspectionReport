@@ -1,0 +1,88 @@
+.settings-page {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 4rem;
+}
+
+.settings-page__sub {
+  color: var(--cds-text-secondary);
+  font-size: 0.875rem;
+  margin-block-end: 2rem;
+}
+
+/* ── Section ────────────────────────────────────────────────── */
+.settings-page__section {
+  margin-block-end: 1.75rem;
+}
+
+.settings-page__section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cds-text-secondary);
+  margin-block-end: 0.5rem;
+}
+
+/* ── Tile ───────────────────────────────────────────────────── */
+.settings-page__tile {
+  padding: 1rem !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+/* ── Rows ───────────────────────────────────────────────────── */
+.settings-page__row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.settings-page__row--spread {
+  justify-content: space-between;
+}
+
+.settings-page__label {
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+  min-width: 6rem;
+}
+
+.settings-page__value {
+  font-size: 0.875rem;
+  color: var(--cds-text-primary);
+}
+
+.settings-page__mono {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8125rem;
+  color: var(--cds-text-primary);
+  word-break: break-all;
+}
+
+.settings-page__mono--small {
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+}
+
+.settings-page__field-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--cds-text-primary);
+  margin-block-end: 0.125rem;
+}
+
+.settings-page__secondary {
+  font-size: 0.75rem;
+  color: var(--cds-text-secondary);
+}
+
+.settings-page__advanced {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}

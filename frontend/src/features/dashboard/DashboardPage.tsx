@@ -1,7 +1,9 @@
 import { LineChart, GroupedBarChart } from '@carbon/charts-react'
 import type { LineChartOptions, BarChartOptions } from '@carbon/charts'
 import '@carbon/charts-react/styles.css'
-import { DatePicker, DatePickerInput, Dropdown, Heading, Tile } from '@carbon/react'
+import { Button, DatePicker, DatePickerInput, Dropdown, Heading, Tile } from '@carbon/react'
+import { ArrowLeft } from '@carbon/icons-react'
+import { useNavigate } from 'react-router-dom'
 import { KpiTile } from '@/components/KpiTile'
 import { useDashboardData } from '@/hooks/useDashboardData'
 import type { AssetType } from '@/types'
@@ -18,10 +20,20 @@ const ASSET_TYPE_ITEMS = [
 ]
 
 export default function DashboardPage() {
+  const navigate = useNavigate()
   const { kpis, weeklyData, defectByAssetType, filters, setFilters } = useDashboardData()
 
   return (
     <div className="dashboard-page">
+      <Button
+        kind="ghost"
+        renderIcon={ArrowLeft}
+        size="sm"
+        onClick={() => navigate('/')}
+        style={{ marginBlockEnd: '0.5rem', paddingInlineStart: 0 }}
+      >
+        New inspection
+      </Button>
       <Heading style={{ marginBlockEnd: '1.5rem' }}>Reporting dashboard</Heading>
 
       {/* Filters */}
